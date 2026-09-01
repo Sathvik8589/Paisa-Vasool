@@ -10,7 +10,7 @@
     <div id="loginPage" class="auth-shell">
       <header class="topbar">
         <div class="brand-box">
-          <span class="brand-tag">Paisa Vasool</span>
+          <span class="brand-tag" data-i18n="brand">Paisa Vasool</span>
         </div>
 
         <div class="language-box">
@@ -26,92 +26,131 @@
       <main class="page-layout">
         <section class="hero">
           <div class="hero-copy">
-            <p class="eyebrow">Smart team money tracking</p>
-            <h1>Track every rupee, team, and event with clarity.</h1>
-            <p class="lead">
-              Create teams, assign members, share photos, and monitor collections in real time with a clean, collaborative workspace built for fund management.
+            <p class="eyebrow" data-i18n="heroEyebrow">Smart team money tracking</p>
+            <h1 data-i18n="heroTitle">Track every rupee, team, and event with clarity.</h1>
+            <p class="lead" data-i18n="heroLead">
+              Create teams, assign members, calculate interest, and manage collections with a simple dashboard built for daily financial tracking.
             </p>
 
             <div class="hero-badges">
-              <span>Team-based tracking</span>
-              <span>Photo sharing</span>
-              <span>Collection reports</span>
+              <span data-i18n="badge1">Team tracking</span>
+              <span data-i18n="badge2">Collection reports</span>
+              <span data-i18n="badge3">Calculator tools</span>
             </div>
 
             <div class="hero-stats">
               <div class="stat-box">
                 <strong>120+</strong>
-                <small>members tracked</small>
+                <small data-i18n="membersTracked">members tracked</small>
               </div>
               <div class="stat-box">
                 <strong>28</strong>
-                <small>active teams</small>
+                <small data-i18n="activeTeams">active teams</small>
               </div>
               <div class="stat-box">
                 <strong>₹84k</strong>
-                <small>collected</small>
+                <small data-i18n="collected">collected</small>
               </div>
             </div>
+
+            <button type="button" id="exploreBtn" class="explore-btn" aria-expanded="false" aria-controls="explorePanel">
+              <span data-i18n="explorePaisaVasool">Explore Paisa Vasool</span>
+              <span class="explore-arrow" aria-hidden="true">↓</span>
+            </button>
+
+            <section id="explorePanel" class="explore-panel hidden" aria-label="Paisa Vasool features">
+              <div class="explore-heading">
+                <p class="eyebrow" data-i18n="exploreEyebrow">A quick look around</p>
+                <h2 data-i18n="exploreTitle">Everything you need to keep money moving.</h2>
+              </div>
+              <div class="explore-grid">
+                <article class="explore-card">
+                  <span class="explore-number">01</span>
+                  <h3 data-i18n="featureTeamTitle">Feature: Team</h3>
+                  <p data-i18n="featureTeamDescription">Create a new team and add team members by name.</p>
+                </article>
+                <article class="explore-card">
+                  <span class="explore-number">02</span>
+                  <h3 data-i18n="featureCollectionTitle">Feature: Money Collection</h3>
+                  <p data-i18n="featureCollectionDescription">Track event contributions from each team member and keep the same team linked across all activities.</p>
+                </article>
+                <article class="explore-card">
+                  <span class="explore-number">03</span>
+                  <h3 data-i18n="featureCalculatorTitle">Feature: Calculator</h3>
+                  <p data-i18n="featureCalculatorDescription">Use a practical calculator for day-to-day arithmetic needs.</p>
+                </article>
+                <article class="explore-card">
+                  <span class="explore-number">04</span>
+                  <h3 data-i18n="featureInterestTitle">Feature: Interest Amount Calculator</h3>
+                  <p data-i18n="featureInterestDescription">Calculate loan or advance interest using the amount, dates, and interest rate.</p>
+                </article>
+              </div>
+            </section>
           </div>
         </section>
 
         <aside class="login-panel">
           <div class="login-card">
             <div class="login-header">
-              <p class="login-kicker">Welcome back</p>
-              <h2>Login</h2>
+              <p class="login-kicker" data-i18n="welcome">Welcome back</p>
+              <h2 data-i18n="login">Login</h2>
             </div>
 
             <form id="loginForm">
               <label>
-                <span>Username</span>
-                <input type="text" id="loginInput" name="login" placeholder="Enter username" required />
+                <span data-i18n="username">Username</span>
+                <input type="text" id="loginInput" name="login" data-placeholder-i18n="loginPlaceholder" placeholder="Enter username" required />
               </label>
 
               <label>
-                <span>Password</span>
-                <input type="password" id="passwordInput" name="password" placeholder="Enter password" required />
+                <span data-i18n="password">Password</span>
+                <input type="password" id="passwordInput" name="password" data-placeholder-i18n="passwordPlaceholder" placeholder="Enter password" required />
               </label>
 
               <div class="link-row">
-                <a href="#">Forgot password?</a>
+                <a href="#" data-i18n="forgotPassword">Forgot password?</a>
               </div>
 
               <div class="button-stack">
-                <button type="submit" class="primary-btn">Sign In</button>
-                <button type="button" id="signupBtn" class="secondary-btn">Create account</button>
+                <button type="submit" class="primary-btn" data-i18n="signIn">Sign In</button>
+                <button type="button" id="signupBtn" class="secondary-btn" data-i18n="createAccount">Create account</button>
               </div>
             </form>
 
             <form id="signupForm" class="hidden">
               <label>
-                <span>Username</span>
-                <input type="text" id="signupUsername" placeholder="Enter username" required />
+                <span data-i18n="signupUsername">Username</span>
+                <input type="text" id="signupUsername" data-placeholder-i18n="signupPlaceholderUsername" placeholder="Enter username" required />
               </label>
 
               <label>
-                <span>New Password</span>
-                <input type="password" id="signupPassword" placeholder="Create password" required />
+                <span data-i18n="signupEmail">Email</span>
+                <input type="email" id="signupEmail" data-placeholder-i18n="signupPlaceholderEmail" placeholder="Enter email address" required />
               </label>
 
               <label>
-                <span>Confirm Password</span>
-                <input type="password" id="signupConfirmPassword" placeholder="Confirm password" required />
+                <span data-i18n="signupMobile">Mobile Number</span>
+                <input type="tel" id="signupMobile" data-placeholder-i18n="signupPlaceholderMobile" placeholder="Enter mobile number" required />
               </label>
 
               <label>
-                <span>Mobile Number</span>
-                <input type="tel" id="signupMobile" placeholder="Enter mobile number" required />
+                <span data-i18n="signupPassword">Password</span>
+                <input type="password" id="signupPassword" data-placeholder-i18n="signupPlaceholderPassword" placeholder="Create password" required />
               </label>
 
               <label>
-                <span>Team Name</span>
-                <input type="text" id="signupTeamName" placeholder="Enter team name" required />
+                <span data-i18n="signupConfirmPassword">Confirm Password</span>
+                <input type="password" id="signupConfirmPassword" data-placeholder-i18n="signupPlaceholderConfirmPassword" placeholder="Confirm password" required />
+              </label>
+
+              <label>
+                <span data-i18n="signupTeamName">Team Name (optional)</span>
+                <input type="text" id="signupTeamName" data-placeholder-i18n="signupPlaceholderTeamName" placeholder="Enter team name" />
               </label>
 
               <div class="button-stack">
-                <button type="submit" class="primary-btn">Create Account</button>
-                <button type="button" id="backToLoginBtn" class="secondary-btn">Back to login</button>
+                <button type="submit" class="primary-btn" data-i18n="createAccountBtn">Create Account</button>
+                <button type="button" id="backToLoginBtn" class="secondary-btn" data-i18n="backToLogin">Back to login</button>
               </div>
             </form>
             <p id="authMessage" class="status-message"></p>
@@ -128,91 +167,182 @@
         </div>
 
         <nav class="sidebar-nav" id="sidebarNav">
-          <button class="nav-btn active" data-view="team">Team</button>
-          <button class="nav-btn" data-view="collection">Money Collection</button>
+          <button class="nav-btn active" data-view="team" data-i18n="navTeam">Team</button>
+          <button class="nav-btn" data-view="collection" data-i18n="navCollection">Money Collection</button>
+          <button class="nav-btn" data-view="calculator" data-i18n="navCalculator">Calculator</button>
+          <button class="nav-btn" data-view="interest" data-i18n="navInterest">Interest Calc</button>
         </nav>
       </aside>
 
       <main class="workspace">
         <header class="workspace-header">
-          <h2 id="viewTitle">Team</h2>
-          <button id="logoutBtn" class="secondary-btn">Logout</button>
+          <h2 id="viewTitle" data-view="team">Team</h2>
+
+          <div class="header-tools">
+            <div class="language-box compact-language">
+              <label for="dashboardLanguageSelect" class="sr-only">Language</label>
+              <select id="dashboardLanguageSelect">
+                <option value="en">English</option>
+                <option value="te">తెలుగు</option>
+                <option value="hi">हिंदी</option>
+              </select>
+            </div>
+
+            <div class="profile-menu-wrap">
+              <button id="profileButton" class="profile-button hidden" type="button" aria-label="Profile menu">
+                <span class="profile-avatar">U</span>
+                <span id="profileName">User</span>
+                <span class="profile-caret">▾</span>
+              </button>
+
+              <div id="profileMenu" class="profile-menu hidden">
+                <button type="button" class="profile-menu-item" data-action="profile" data-i18n="showProfile">Show Profile</button>
+                <button type="button" class="profile-menu-item" data-action="edit" data-i18n="editProfile">Edit Profile</button>
+                <button type="button" class="profile-menu-item" data-action="settings" data-i18n="settings">Settings</button>
+              </div>
+            </div>
+
+            <button id="logoutBtn" class="secondary-btn" data-i18n="logout">Logout</button>
+          </div>
         </header>
 
         <section id="teamView" class="view-panel active">
           <div class="feature-card">
-            <h3>Feature: Team</h3>
-            <p>Create a new team and add team members by name.</p>
+            <h3 data-i18n="featureTeamTitle">Feature: Team</h3>
+            <p data-i18n="featureTeamDescription">Create a new team and add team members by name.</p>
 
             <form id="teamForm" class="mini-form">
               <label>
-                <span>Team Name</span>
-                <input type="text" id="teamName" placeholder="Example: Event Crew" required />
+                <span data-i18n="teamNameLabel">Team Name</span>
+                <input type="text" id="teamName" data-placeholder-i18n="teamNamePlaceholder" placeholder="Example: Event Crew" required />
               </label>
 
               <label>
-                <span>Team Head</span>
-                <input type="text" id="teamHead" placeholder="Example: Raj" required />
+                <span data-i18n="teamHeadLabel">Team Head</span>
+                <input type="text" id="teamHead" data-placeholder-i18n="teamHeadPlaceholder" placeholder="Example: Raj" required />
               </label>
 
-              <button type="submit" class="primary-btn">Create Team</button>
+              <button type="submit" class="primary-btn" data-i18n="createTeam">Create Team</button>
             </form>
 
             <div class="team-list" id="teamList">
-              <p class="empty-message">No teams created yet. Create your first team and add members.</p>
+              <p class="empty-message" data-i18n="noTeams">No teams created yet. Create your first team and add members.</p>
             </div>
 
             <form id="memberForm" class="mini-form hidden">
               <label>
-                <span>Add Team Member</span>
-                <input type="text" id="memberName" placeholder="Member name" required />
+                <span data-i18n="addTeamMember">Add Team Member</span>
+                <input type="text" id="memberName" data-placeholder-i18n="memberNamePlaceholder" placeholder="Member name" required />
               </label>
-              <button type="submit" class="secondary-btn">Add Member</button>
+              <button type="submit" class="secondary-btn" data-i18n="addMember">Add Member</button>
             </form>
           </div>
         </section>
 
         <section id="collectionView" class="view-panel">
           <div class="feature-card">
-            <h3>Feature: Money Collection</h3>
-            <p>Track event contributions from each team member and keep the same team linked across all activities.</p>
+            <h3 data-i18n="featureCollectionTitle">Feature: Money Collection</h3>
+            <p data-i18n="featureCollectionDescription">Track event contributions from each team member and keep the same team linked across all activities.</p>
 
             <form id="collectionForm" class="mini-form">
               <label>
-                <span>Select Team</span>
+                <span data-i18n="selectTeam">Select Team</span>
                 <select id="collectionTeamSelect"></select>
               </label>
 
               <label>
-                <span>Event</span>
-                <input type="text" id="eventName" placeholder="Example: Annual Meetup" required />
+                <span data-i18n="event">Event</span>
+                <input type="text" id="eventName" data-placeholder-i18n="eventPlaceholder" placeholder="Example: Annual Meetup" required />
               </label>
 
               <label>
-                <span>Member Name</span>
+                <span data-i18n="memberNameLabel">Member Name</span>
                 <select id="collectionMemberSelect"></select>
               </label>
 
               <label>
-                <span>Amount</span>
-                <input type="number" id="collectionAmount" min="1" step="0.01" placeholder="500" required />
+                <span data-i18n="amount">Amount</span>
+                <input type="number" id="collectionAmount" min="1" step="0.01" data-placeholder-i18n="amountPlaceholder" placeholder="500" required />
               </label>
 
-              <button type="submit" class="primary-btn">Collect Money</button>
+              <button type="submit" class="primary-btn" data-i18n="collectMoney">Collect Money</button>
             </form>
 
             <div id="collectionSummary" class="collection-summary"></div>
           </div>
         </section>
+
+        <section id="calculatorView" class="view-panel">
+          <div class="feature-card tool-card">
+            <h3 data-i18n="featureCalculatorTitle">Feature: Calculator</h3>
+            <p data-i18n="featureCalculatorDescription">Use a practical calculator for day-to-day arithmetic needs.</p>
+
+            <form id="calculatorForm" class="mini-form">
+              <label>
+                <span data-i18n="expression">Expression</span>
+                <input type="text" id="calculatorInput" data-placeholder-i18n="expressionPlaceholder" placeholder="Example: 1500 + 350 * 2" required />
+              </label>
+              <button type="submit" class="primary-btn" data-i18n="calculate">Calculate</button>
+            </form>
+
+            <div class="result-box">
+              <span class="result-label" data-i18n="result">Result</span>
+              <strong id="calculatorResult">0</strong>
+            </div>
+          </div>
+        </section>
+
+        <section id="interestView" class="view-panel">
+          <div class="feature-card tool-card">
+            <h3 data-i18n="featureInterestTitle">Feature: Interest Amount Calculator</h3>
+            <p data-i18n="featureInterestDescription">Calculate loan or advance interest using the amount, dates, and interest rate.</p>
+
+            <form id="interestForm" class="mini-form">
+              <label>
+                <span data-i18n="amountTaken">Amount Taken</span>
+                <input type="number" id="principalAmount" min="1" step="0.01" data-placeholder-i18n="amountTakenPlaceholder" placeholder="5000" required />
+              </label>
+
+              <label>
+                <span data-i18n="interestRate">Interest Rate (%)</span>
+                <input type="number" id="interestRate" min="0.1" step="0.01" data-placeholder-i18n="interestRatePlaceholder" placeholder="12" required />
+              </label>
+
+              <div class="two-col-grid">
+                <label>
+                  <span data-i18n="takenDate">Amount Taken Date</span>
+                  <input type="date" id="loanStartDate" required />
+                </label>
+                <label>
+                  <span data-i18n="returnDate">Return Date</span>
+                  <input type="date" id="loanEndDate" required />
+                </label>
+              </div>
+
+              <button type="submit" class="primary-btn" data-i18n="calculateInterest">Calculate Interest</button>
+            </form>
+
+            <div class="interest-result">
+              <div class="result-box small-box">
+                <span class="result-label" data-i18n="interest">Interest</span>
+                <strong id="interestValue">₹0.00</strong>
+              </div>
+              <div class="result-box small-box">
+                <span class="result-label" data-i18n="totalAmount">Total Amount</span>
+                <strong id="totalAmountValue">₹0.00</strong>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
     </div>
 
-    <script src="features/authFeature.js"></script>
-    <script src="features/dashboardFeature.js"></script>
-    <script src="features/languageFeature.js"></script>
-    <script src="features/teamFeature.js"></script>
-    <script src="features/teamMembersFeature.js"></script>
-    <script src="features/moneyCollectionFeature.js"></script>
+    <script src="authFeature.js"></script>
+    <script src="dashboardFeature.js"></script>
+    <script src="languageFeature.js"></script>
+    <script src="teamFeature.js"></script>
+    <script src="teamMembersFeature.js"></script>
+    <script src="moneyCollectionFeature.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

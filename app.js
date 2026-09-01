@@ -8,6 +8,12 @@ const menuToggle = document.getElementById('menuToggle');
 const sidebar = document.getElementById('sidebar');
 const currentUserLabel = document.getElementById('currentUserLabel');
 const viewTitle = document.getElementById('viewTitle');
+const profileButton = document.getElementById('profileButton');
+const profileName = document.getElementById('profileName');
+const profileMenu = document.getElementById('profileMenu');
+const dashboardLanguageSelect = document.getElementById('dashboardLanguageSelect');
+const exploreBtn = document.getElementById('exploreBtn');
+const explorePanel = document.getElementById('explorePanel');
 
 const teamForm = document.getElementById('teamForm');
 const teamList = document.getElementById('teamList');
@@ -20,6 +26,16 @@ const collectionForm = document.getElementById('collectionForm');
 const collectionTeamSelect = document.getElementById('collectionTeamSelect');
 const collectionMemberSelect = document.getElementById('collectionMemberSelect');
 const collectionSummary = document.getElementById('collectionSummary');
+const calculatorForm = document.getElementById('calculatorForm');
+const calculatorInput = document.getElementById('calculatorInput');
+const calculatorResult = document.getElementById('calculatorResult');
+const interestForm = document.getElementById('interestForm');
+const principalAmount = document.getElementById('principalAmount');
+const interestRate = document.getElementById('interestRate');
+const loanStartDate = document.getElementById('loanStartDate');
+const loanEndDate = document.getElementById('loanEndDate');
+const interestValue = document.getElementById('interestValue');
+const totalAmountValue = document.getElementById('totalAmountValue');
 const navButtons = document.querySelectorAll('.nav-btn');
 const viewPanels = document.querySelectorAll('.view-panel');
 
@@ -33,6 +49,7 @@ if (window.AuthFeature) {
     loginInput: document.getElementById('loginInput'),
     passwordInput: document.getElementById('passwordInput'),
     signupUsername: document.getElementById('signupUsername'),
+    signupEmail: document.getElementById('signupEmail'),
     signupPassword: document.getElementById('signupPassword'),
     signupConfirmPassword: document.getElementById('signupConfirmPassword'),
     signupMobile: document.getElementById('signupMobile'),
@@ -81,6 +98,19 @@ if (window.MoneyCollectionFeature) {
 if (window.LanguageFeature) {
   window.LanguageFeature.bind({
     languageSelect: document.getElementById('languageSelect'),
+    dashboardLanguageSelect,
+  });
+}
+
+if (exploreBtn && explorePanel) {
+  exploreBtn.addEventListener('click', () => {
+    const isOpening = explorePanel.classList.contains('hidden');
+    explorePanel.classList.toggle('hidden', !isOpening);
+    exploreBtn.setAttribute('aria-expanded', String(isOpening));
+    exploreBtn.querySelector('.explore-arrow').textContent = isOpening ? '↑' : '↓';
+    if (isOpening) {
+      explorePanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   });
 }
 
@@ -126,19 +156,34 @@ function getAuthHeaders() {
   };
 }
 
+function updateProfileHeader() {
+  const displayUser = currentUser || 'User';
+  currentUserLabel.textContent = displayUser;
+  if (profileName) profileName.textContent = displayUser;
+  if (profileButton) {
+    profileButton.classList.toggle('hidden', !currentUser);
+  }
+  if (profileMenu) {
+    profileMenu.classList.add('hidden');
+  }
+}
+
 function showLoginPage() {
   loginPage.classList.remove('hidden');
   dashboardPage.classList.add('hidden');
   currentUser = '';
   localStorage.removeItem('paisaUser');
   currentUserLabel.textContent = 'User';
+  if (profileName) profileName.textContent = 'User';
+  if (profileButton) profileButton.classList.add('hidden');
+  if (profileMenu) profileMenu.classList.add('hidden');
   authMessage.textContent = '';
 }
 
 function showDashboard() {
   loginPage.classList.add('hidden');
   dashboardPage.classList.remove('hidden');
-  currentUserLabel.textContent = currentUser;
+  updateProfileHeader();
   fetchTeams();
 }
 
@@ -160,7 +205,10 @@ function setActiveView(viewName) {
   const titles = {
     team: 'Team',
     collection: 'Money Collection',
+    calculator: 'Calculator',
+    interest: 'Interest Calculator',
   };
+  viewTitle.dataset.view = viewName;
   viewTitle.textContent = titles[viewName] || 'Dashboard';
 }
 
@@ -296,6 +344,35 @@ function renderCollectionSummary(team) {
   `;
 }
 
+function calculateExpression(expression) {
+  const sanitized = expression.replace(/\s+/g, '');
+  if (!sanitized || !/^[0-9+\-*/().%]+$/.test(sanitized)) {
+    throw new Error('Invalid expression.');
+  }
+
+  // eslint-disable-next-line no-new-func
+  const result = Function(`"use strict"; return (${sanitized});`)();
+  if (!Number.isFinite(result)) {
+    throw new Error('Invalid calculation.');
+  }
+  return Number(result);
+}
+
+function calculateInterest(primaryAmount, rate, startDate, endDate) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const diffDays = Math.max(0, (end - start) / (1000 * 60 * 60 * 24));
+  const annualRate = Number(rate) / 100;
+  const interest = (Number(primaryAmount) * annualRate * diffDays) / 365;
+  const total = Number(primaryAmount) + interest;
+
+  return {
+    interest,
+    total,
+    days: diffDays,
+  };
+}
+
 async function handleLogin({ login, password }) {
   if (!login || !password) {
     setAuthMessage('Please enter both login and password.', true);
@@ -319,15 +396,16 @@ async function handleLogin({ login, password }) {
     localStorage.setItem('paisaUser', currentUser);
     setAuthMessage(result.message || 'Login successful.');
     setActiveView('team');
+    updateProfileHeader();
     showDashboard();
   } catch (error) {
     setAuthMessage('Login failed. Please try again.', true);
   }
 }
 
-async function handleSignup({ username, password, confirmPassword, mobileNumber, teamName }) {
-  if (!username || !password || !confirmPassword || !mobileNumber || !teamName) {
-    setAuthMessage('Please fill in username, password, mobile number, and team name.', true);
+async function handleSignup({ username, email, password, confirmPassword, mobileNumber, teamName }) {
+  if (!username || !email || !password || !confirmPassword || !mobileNumber) {
+    setAuthMessage('Please fill in username, email, password, and mobile number.', true);
     return;
   }
 
@@ -340,7 +418,7 @@ async function handleSignup({ username, password, confirmPassword, mobileNumber,
     const response = await fetch('/api/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password, confirmPassword, mobileNumber, teamName }),
+      body: JSON.stringify({ username, email, password, confirmPassword, mobileNumber, teamName }),
     });
 
     const result = await response.json();
@@ -350,6 +428,7 @@ async function handleSignup({ username, password, confirmPassword, mobileNumber,
     }
 
     document.getElementById('signupUsername').value = '';
+    document.getElementById('signupEmail').value = '';
     document.getElementById('signupPassword').value = '';
     document.getElementById('signupConfirmPassword').value = '';
     document.getElementById('signupMobile').value = '';
@@ -468,6 +547,70 @@ collectionForm.addEventListener('submit', async (event) => {
     fetchTeams();
   } catch (error) {
     setAuthMessage('Collection failed.', true);
+  }
+});
+
+calculatorForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  try {
+    const result = calculateExpression(calculatorInput.value);
+    calculatorResult.textContent = Number(result).toLocaleString(undefined, {
+      maximumFractionDigits: 6,
+    });
+  } catch (error) {
+    calculatorResult.textContent = 'Invalid';
+    setAuthMessage('Calculator expression is invalid.', true);
+  }
+});
+
+interestForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  const amount = Number(principalAmount.value);
+  const rate = Number(interestRate.value);
+  const startDate = loanStartDate.value;
+  const endDate = loanEndDate.value;
+
+  if (!amount || !rate || !startDate || !endDate) {
+    setAuthMessage('Please enter valid amount, rate, and dates.', true);
+    return;
+  }
+
+  if (new Date(endDate) < new Date(startDate)) {
+    setAuthMessage('Return date must be after the amount taken date.', true);
+    return;
+  }
+
+  const result = calculateInterest(amount, rate, startDate, endDate);
+
+  interestValue.textContent = `₹${result.interest.toFixed(2)}`;
+  totalAmountValue.textContent = `₹${result.total.toFixed(2)}`;
+  setAuthMessage(`Calculated interest for ${result.days} days.`);
+});
+
+profileButton?.addEventListener('click', () => {
+  if (!currentUser) return;
+  profileMenu?.classList.toggle('hidden');
+});
+
+profileMenu?.querySelectorAll('.profile-menu-item').forEach((item) => {
+  item.addEventListener('click', () => {
+    const action = item.dataset.action;
+    const actions = {
+      profile: 'Profile information is available after login.',
+      edit: 'Profile edit page is ready for future updates.',
+      settings: 'Settings opened successfully.',
+    };
+    setAuthMessage(actions[action] || 'Profile action selected.');
+    profileMenu?.classList.add('hidden');
+  });
+});
+
+document.addEventListener('click', (event) => {
+  if (!profileMenu || !profileButton) return;
+  if (!profileButton.contains(event.target) && !profileMenu.contains(event.target)) {
+    profileMenu.classList.add('hidden');
   }
 });
 

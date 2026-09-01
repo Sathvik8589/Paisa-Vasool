@@ -40,6 +40,8 @@
       const titles = {
         team: 'Team',
         collection: 'Money Collection',
+        calculator: 'Calculator',
+        interest: 'Interest Calculator',
       };
 
       if (viewTitle) {
