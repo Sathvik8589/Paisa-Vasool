@@ -1,0 +1,12 @@
+{
+  "name": "paisa-vasool",
+  "version": "1.0.0",
+  "description": "Paisa Vasool team money collection app",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Paisa Vasool</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="loginPage" class="auth-shell">
+      <header class="topbar">
+        <div class="brand-box">
+          <span class="brand-tag">Paisa Vasool</span>
+        </div>
+
+        <div class="language-box">
+          <label for="languageSelect" class="sr-only">Language</label>
+          <select id="languageSelect">
+            <option value="en">English</option>
+            <option value="te">తెలుగు</option>
+            <option value="hi">हिंदी</option>
+          </select>
+        </div>
+      </header>
+
+      <main class="page-layout">
+        <section class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">Smart team money tracking</p>
+            <h1>Track every rupee, team, and event with clarity.</h1>
+            <p class="lead">
+              Create teams, assign members, share photos, and monitor collections in real time with a clean, collaborative workspace built for fund management.
+            </p>
+
+            <div class="hero-badges">
+              <span>Team-based tracking</span>
+              <span>Photo sharing</span>
+              <span>Collection reports</span>
+            </div>
+
+            <div class="hero-stats">
+              <div class="stat-box">
+                <strong>120+</strong>
+                <small>members tracked</small>
+              </div>
+              <div class="stat-box">
+                <strong>28</strong>
+                <small>active teams</small>
+              </div>
+              <div class="stat-box">
+                <strong>₹84k</strong>
+                <small>collected</small>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="login-panel">
+          <div class="login-card">
+            <div class="login-header">
+              <p class="login-kicker">Welcome back</p>
+              <h2>Login</h2>
+            </div>
+
+            <form id="loginForm">
+              <label>
+                <span>Username</span>
+                <input type="text" id="loginInput" name="login" placeholder="Enter username" required />
+              </label>
+
+              <label>
+                <span>Password</span>
+                <input type="password" id="passwordInput" name="password" placeholder="Enter password" required />
+              </label>
+
+              <div class="link-row">
+                <a href="#">Forgot password?</a>
+              </div>
+
+              <div class="button-stack">
+                <button type="submit" class="primary-btn">Sign In</button>
+                <button type="button" id="signupBtn" class="secondary-btn">Create account</button>
+              </div>
+            </form>
+
+            <form id="signupForm" class="hidden">
+              <label>
+                <span>Username</span>
+                <input type="text" id="signupUsername" placeholder="Enter username" required />
+              </label>
+
+              <label>
+                <span>New Password</span>
+                <input type="password" id="signupPassword" placeholder="Create password" required />
+              </label>
+
+              <label>
+                <span>Confirm Password</span>
+                <input type="password" id="signupConfirmPassword" placeholder="Confirm password" required />
+              </label>
+
+              <label>
+                <span>Mobile Number</span>
+                <input type="tel" id="signupMobile" placeholder="Enter mobile number" required />
+              </label>
+
+              <label>
+                <span>Team Name</span>
+                <input type="text" id="signupTeamName" placeholder="Enter team name" required />
+              </label>
+
+              <div class="button-stack">
+                <button type="submit" class="primary-btn">Create Account</button>
+                <button type="button" id="backToLoginBtn" class="secondary-btn">Back to login</button>
+              </div>
+            </form>
+            <p id="authMessage" class="status-message"></p>
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <div id="dashboardPage" class="dashboard hidden">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <button id="menuToggle" class="menu-toggle" aria-label="Toggle menu">☰</button>
+          <span id="currentUserLabel" class="user-label">User</span>
+        </div>
+
+        <nav class="sidebar-nav" id="sidebarNav">
+          <button class="nav-btn active" data-view="team">Team</button>
+          <button class="nav-btn" data-view="collection">Money Collection</button>
+        </nav>
+      </aside>
+
+      <main class="workspace">
+        <header class="workspace-header">
+          <h2 id="viewTitle">Team</h2>
+          <button id="logoutBtn" class="secondary-btn">Logout</button>
+        </header>
+
+        <section id="teamView" class="view-panel active">
+          <div class="feature-card">
+            <h3>Feature: Team</h3>
+            <p>Create a new team and add team members by name.</p>
+
+            <form id="teamForm" class="mini-form">
+              <label>
+                <span>Team Name</span>
+                <input type="text" id="teamName" placeholder="Example: Event Crew" required />
+              </label>
+
+              <label>
+                <span>Team Head</span>
+                <input type="text" id="teamHead" placeholder="Example: Raj" required />
+              </label>
+
+              <button type="submit" class="primary-btn">Create Team</button>
+            </form>
+
+            <div class="team-list" id="teamList">
+              <p class="empty-message">No teams created yet. Create your first team and add members.</p>
+            </div>
+
+            <form id="memberForm" class="mini-form hidden">
+              <label>
+                <span>Add Team Member</span>
+                <input type="text" id="memberName" placeholder="Member name" required />
+              </label>
+              <button type="submit" class="secondary-btn">Add Member</button>
+            </form>
+          </div>
+        </section>
+
+        <section id="collectionView" class="view-panel">
+          <div class="feature-card">
+            <h3>Feature: Money Collection</h3>
+            <p>Track event contributions from each team member and keep the same team linked across all activities.</p>
+
+            <form id="collectionForm" class="mini-form">
+              <label>
+                <span>Select Team</span>
+                <select id="collectionTeamSelect"></select>
+              </label>
+
+              <label>
+                <span>Event</span>
+                <input type="text" id="eventName" placeholder="Example: Annual Meetup" required />
+              </label>
+
+              <label>
+                <span>Member Name</span>
+                <select id="collectionMemberSelect"></select>
+              </label>
+
+              <label>
+                <span>Amount</span>
+                <input type="number" id="collectionAmount" min="1" step="0.01" placeholder="500" required />
+              </label>
+
+              <button type="submit" class="primary-btn">Collect Money</button>
+            </form>
+
+            <div id="collectionSummary" class="collection-summary"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="features/authFeature.js"></script>
+    <script src="features/dashboardFeature.js"></script>
+    <script src="features/languageFeature.js"></script>
+    <script src="features/teamFeature.js"></script>
+    <script src="features/teamMembersFeature.js"></script>
+    <script src="features/moneyCollectionFeature.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

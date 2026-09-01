@@ -1,0 +1,51 @@
+{
+  "teams": [
+    {
+      "id": "1",
+      "name": "ssss",
+      "headName": "ffff",
+      "members": [
+        "sas",
+        "weew"
+      ],
+      "photos": [],
+      "collections": [
+        {
+          "id": "1",
+          "eventName": "as",
+          "memberName": "weew",
+          "amount": 333.0,
+          "date": "2026-08-31T09:38:58.457768"
+        },
+        {
+          "id": "2",
+          "eventName": "as",
+          "memberName": "sas",
+          "amount": 444.0,
+          "date": "2026-08-31T09:39:12.835177"
+        },
+        {
+          "id": "3",
+          "eventName": "as",
+          "memberName": "sas",
+          "amount": 9999.0,
+          "date": "2026-08-31T09:52:00.172836"
+        }
+      ],
+      "createdAt": "2026-08-31T09:38:25.861519"
+    },
+    {
+      "id": "2",
+      "name": "Event Crew",
+      "headName": "Raj",
+      "members": [
+        "A",
+        "B"
+      ],
+      "photos": [],
+      "collections": [],
+      "createdAt": "2026-08-31T09:49:12.372622"
+    }
+  ],
+  "users": []
+}
