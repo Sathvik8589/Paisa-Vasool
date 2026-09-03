@@ -5,13 +5,14 @@
       selectedTeamId: null,
     },
 
-    bind({ teamList, memberForm, collectionTeamSelect, collectionMemberSelect, collectionSummary }) {
+    bind({ teamList, memberForm, collectionTeamSelect, collectionMemberSelect, collectionSummary, membersOverview }) {
       this.elements = {
         teamList,
         memberForm,
         collectionTeamSelect,
         collectionMemberSelect,
         collectionSummary,
+        membersOverview,
       };
     },
 
@@ -20,12 +21,14 @@
       this.state.selectedTeamId = nextSelectedTeamId || this.state.teams[0]?.id || null;
       this.renderTeams();
       this.renderCollectionOptions();
+      this.renderMembersOverview();
     },
 
     setSelectedTeamId(teamId) {
       this.state.selectedTeamId = teamId;
       this.renderCollectionOptions();
       this.renderTeams();
+      this.renderMembersOverview();
     },
 
     renderTeams() {
@@ -48,7 +51,6 @@
           (team) => `
             <div class="team-item" data-id="${team.id}">
               <h4>${team.name}</h4>
-              <p><strong>Head:</strong> ${team.headName}</p>
               <ul class="member-list">
                 ${(team.members || []).length ? team.members.map((member) => `<li>${member}</li>`).join('') : '<li>No members added yet</li>'}
               </ul>
@@ -89,6 +91,23 @@
         .join('') || '<option value="">No members</option>';
 
       this.renderCollectionSummary(selectedTeam);
+    },
+
+    renderMembersOverview() {
+      const { membersOverview } = this.elements;
+      if (!membersOverview) return;
+      if (!this.state.teams.length) {
+        membersOverview.innerHTML = '<p class="empty-message">No teams created yet.</p>';
+        return;
+      }
+      membersOverview.innerHTML = this.state.teams.map((team) => `
+        <article class="members-team-card">
+          <h4>${team.name}</h4>
+          <ul class="member-list">
+            ${(team.members || []).length ? team.members.map((member) => `<li>${member}</li>`).join('') : '<li>No members added yet</li>'}
+          </ul>
+        </article>
+      `).join('');
     },
 
     renderCollectionSummary(team) {

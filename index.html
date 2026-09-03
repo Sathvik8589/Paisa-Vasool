@@ -66,7 +66,7 @@
               <div class="explore-grid">
                 <article class="explore-card">
                   <span class="explore-number">01</span>
-                  <h3 data-i18n="featureTeamTitle">Feature: Team</h3>
+                  <h3 data-i18n="featureTeamTitle">Team</h3>
                   <p data-i18n="featureTeamDescription">Create a new team and add team members by name.</p>
                 </article>
                 <article class="explore-card">
@@ -167,7 +167,8 @@
         </div>
 
         <nav class="sidebar-nav" id="sidebarNav">
-          <button class="nav-btn active" data-view="team" data-i18n="navTeam">Team</button>
+          <button class="nav-btn active" data-view="team" data-i18n="navTeam">Team Creation</button>
+          <button class="nav-btn" data-view="members" data-i18n="navMembers">Team Members</button>
           <button class="nav-btn" data-view="collection" data-i18n="navCollection">Money Collection</button>
           <button class="nav-btn" data-view="calculator" data-i18n="navCalculator">Calculator</button>
           <button class="nav-btn" data-view="interest" data-i18n="navInterest">Interest Calc</button>
@@ -176,7 +177,7 @@
 
       <main class="workspace">
         <header class="workspace-header">
-          <h2 id="viewTitle" data-view="team">Team</h2>
+          <h2 id="viewTitle" data-view="team">Team Creation</h2>
 
           <div class="header-tools">
             <div class="language-box compact-language">
@@ -208,18 +209,28 @@
 
         <section id="teamView" class="view-panel active">
           <div class="feature-card">
-            <h3 data-i18n="featureTeamTitle">Feature: Team</h3>
+            <h3 data-i18n="featureTeamTitle">Team Creation</h3>
             <p data-i18n="featureTeamDescription">Create a new team and add team members by name.</p>
 
             <form id="teamForm" class="mini-form">
               <label>
                 <span data-i18n="teamNameLabel">Team Name</span>
-                <input type="text" id="teamName" data-placeholder-i18n="teamNamePlaceholder" placeholder="Example: Event Crew" required />
+                <input type="text" id="teamName" data-placeholder-i18n="teamNamePlaceholder" placeholder="Enter team name" required />
               </label>
 
               <label>
-                <span data-i18n="teamHeadLabel">Team Head</span>
-                <input type="text" id="teamHead" data-placeholder-i18n="teamHeadPlaceholder" placeholder="Example: Raj" required />
+                <span data-i18n="teamHeadOneLabel">Team Head 1</span>
+                <input type="text" id="teamHeadOne" data-placeholder-i18n="teamHeadPlaceholder" placeholder="Enter team head" required />
+              </label>
+
+              <label>
+                <span data-i18n="teamHeadTwoLabel">Team Head 2</span>
+                <input type="text" id="teamHeadTwo" data-placeholder-i18n="teamHeadPlaceholder" placeholder="Enter team head" required />
+              </label>
+
+              <label>
+                <span data-i18n="teamHeadThreeLabel">Team Head 3</span>
+                <input type="text" id="teamHeadThree" data-placeholder-i18n="teamHeadPlaceholder" placeholder="Enter team head" required />
               </label>
 
               <button type="submit" class="primary-btn" data-i18n="createTeam">Create Team</button>
@@ -269,6 +280,52 @@
             </form>
 
             <div id="collectionSummary" class="collection-summary"></div>
+          </div>
+        </section>
+
+        <section id="membersView" class="view-panel">
+          <div class="feature-card">
+            <h3 data-i18n="teamMembersTitle">Team Members</h3>
+            <p data-i18n="teamMembersDescription">View every team and the members assigned to it.</p>
+            <div id="membersOverview" class="members-overview"></div>
+          </div>
+        </section>
+
+        <section id="profileView" class="view-panel">
+          <div class="feature-card account-card">
+            <h3 data-i18n="profileTitle">Profile</h3>
+            <div id="profileDetails" class="profile-details"></div>
+            <form id="profileEditForm" class="mini-form hidden">
+              <h4 data-i18n="editProfileTitle">Edit Profile</h4>
+              <label><span data-i18n="signupEmail">Email</span><input type="email" id="editEmail" required /></label>
+              <label><span data-i18n="signupMobile">Mobile Number</span><input type="tel" id="editMobile" required /></label>
+              <label><span data-i18n="signupTeamName">Team Name</span><input type="text" id="editTeamName" required /></label>
+              <button type="submit" class="primary-btn" data-i18n="saveProfile">Save Profile</button>
+            </form>
+            <form id="passwordForm" class="mini-form">
+              <h4 data-i18n="changePassword">Change Password</h4>
+              <label><span data-i18n="currentPassword">Current Password</span><input type="password" id="currentPassword" required /></label>
+              <label><span data-i18n="newPassword">New Password</span><input type="password" id="newPassword" minlength="8" required /></label>
+              <label><span data-i18n="confirmNewPassword">Confirm New Password</span><input type="password" id="confirmNewPassword" minlength="8" required /></label>
+              <button type="submit" class="primary-btn" data-i18n="updatePassword">Update Password</button>
+            </form>
+          </div>
+        </section>
+
+        <section id="settingsView" class="view-panel">
+          <div class="feature-card account-card">
+            <h3 data-i18n="settingsTitle">Settings</h3>
+            <p data-i18n="settingsDescription">Manage general application preferences.</p>
+            <div class="settings-row">
+              <div>
+                <strong data-i18n="appearance">Appearance</strong>
+                <p data-i18n="appearanceDescription">Choose how Paisa Vasool looks on this device.</p>
+              </div>
+              <div class="mode-switch" role="group" aria-label="Appearance mode">
+                <button type="button" id="lightModeBtn" class="mode-btn" data-i18n="lightMode">Light</button>
+                <button type="button" id="darkModeBtn" class="mode-btn" data-i18n="darkMode">Dark</button>
+              </div>
+            </div>
           </div>
         </section>
 

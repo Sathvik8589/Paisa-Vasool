@@ -14,13 +14,20 @@ const profileMenu = document.getElementById('profileMenu');
 const dashboardLanguageSelect = document.getElementById('dashboardLanguageSelect');
 const exploreBtn = document.getElementById('exploreBtn');
 const explorePanel = document.getElementById('explorePanel');
+const profileDetails = document.getElementById('profileDetails');
+const profileEditForm = document.getElementById('profileEditForm');
+const passwordForm = document.getElementById('passwordForm');
+const lightModeBtn = document.getElementById('lightModeBtn');
+const darkModeBtn = document.getElementById('darkModeBtn');
 
 const teamForm = document.getElementById('teamForm');
 const teamList = document.getElementById('teamList');
 const memberForm = document.getElementById('memberForm');
 const memberNameInput = document.getElementById('memberName');
 const teamNameInput = document.getElementById('teamName');
-const teamHeadInput = document.getElementById('teamHead');
+const teamHeadOneInput = document.getElementById('teamHeadOne');
+const teamHeadTwoInput = document.getElementById('teamHeadTwo');
+const teamHeadThreeInput = document.getElementById('teamHeadThree');
 
 const collectionForm = document.getElementById('collectionForm');
 const collectionTeamSelect = document.getElementById('collectionTeamSelect');
@@ -38,6 +45,7 @@ const interestValue = document.getElementById('interestValue');
 const totalAmountValue = document.getElementById('totalAmountValue');
 const navButtons = document.querySelectorAll('.nav-btn');
 const viewPanels = document.querySelectorAll('.view-panel');
+const membersOverview = document.getElementById('membersOverview');
 
 if (window.AuthFeature) {
   window.AuthFeature.bind({
@@ -72,7 +80,9 @@ if (window.TeamMembersFeature) {
   window.TeamMembersFeature.bind({
     teamForm,
     teamNameInput,
-    teamHeadInput,
+    teamHeadOneInput,
+    teamHeadTwoInput,
+    teamHeadThreeInput,
     memberForm,
     memberNameInput,
     onCreateTeam: handleCreateTeam,
@@ -84,6 +94,7 @@ if (window.TeamFeature) {
   window.TeamFeature.bind({
     teamList,
     memberForm,
+    membersOverview,
   });
 }
 
@@ -101,6 +112,17 @@ if (window.LanguageFeature) {
     dashboardLanguageSelect,
   });
 }
+
+function setTheme(mode) {
+  document.documentElement.dataset.theme = mode;
+  localStorage.setItem('paisaTheme', mode);
+  lightModeBtn?.classList.toggle('active', mode === 'light');
+  darkModeBtn?.classList.toggle('active', mode === 'dark');
+}
+
+setTheme(localStorage.getItem('paisaTheme') || 'light');
+lightModeBtn?.addEventListener('click', () => setTheme('light'));
+darkModeBtn?.addEventListener('click', () => setTheme('dark'));
 
 if (exploreBtn && explorePanel) {
   exploreBtn.addEventListener('click', () => {
@@ -210,6 +232,21 @@ function setActiveView(viewName) {
   };
   viewTitle.dataset.view = viewName;
   viewTitle.textContent = titles[viewName] || 'Dashboard';
+}
+
+async function loadProfile() {
+  try {
+    const response = await fetch('/api/profile', { headers: getAuthHeaders() });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.detail || 'Unable to load profile.');
+    const profile = result.profile;
+    profileDetails.innerHTML = `<dl><div><dt>Username</dt><dd>${profile.login}</dd></div><div><dt>Email</dt><dd>${profile.email}</dd></div><div><dt>Mobile Number</dt><dd>${profile.mobileNumber}</dd></div><div><dt>Team Name</dt><dd>${profile.teamName}</dd></div></dl>`;
+    document.getElementById('editEmail').value = profile.email;
+    document.getElementById('editMobile').value = profile.mobileNumber;
+    document.getElementById('editTeamName').value = profile.teamName;
+  } catch (error) {
+    setAuthMessage(error.message, true);
+  }
 }
 
 async function fetchTeams() {
@@ -450,12 +487,12 @@ if (window.AuthFeature) {
   });
 }
 
-async function handleCreateTeam({ name, headName }) {
+async function handleCreateTeam({ name, headNames }) {
   try {
     const response = await fetch('/api/teams', {
       method: 'POST',
       headers: getAuthHeaders(),
-      body: JSON.stringify({ name, headName, members: [] }),
+      body: JSON.stringify({ name, headNames, members: [] }),
     });
 
     const result = await response.json();
@@ -465,7 +502,9 @@ async function handleCreateTeam({ name, headName }) {
     }
 
     teamNameInput.value = '';
-    teamHeadInput.value = '';
+    teamHeadOneInput.value = '';
+    teamHeadTwoInput.value = '';
+    teamHeadThreeInput.value = '';
     setAuthMessage(`Team created: ${result.team.name}`);
     fetchTeams();
   } catch (error) {
@@ -597,14 +636,58 @@ profileButton?.addEventListener('click', () => {
 profileMenu?.querySelectorAll('.profile-menu-item').forEach((item) => {
   item.addEventListener('click', () => {
     const action = item.dataset.action;
-    const actions = {
-      profile: 'Profile information is available after login.',
-      edit: 'Profile edit page is ready for future updates.',
-      settings: 'Settings opened successfully.',
-    };
-    setAuthMessage(actions[action] || 'Profile action selected.');
+    if (action === 'profile' || action === 'edit') {
+      setActiveView('profile');
+      loadProfile();
+      profileEditForm?.classList.toggle('hidden', action !== 'edit');
+    } else if (action === 'settings') {
+      setActiveView('settings');
+    }
     profileMenu?.classList.add('hidden');
   });
+});
+
+profileEditForm?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  try {
+    const response = await fetch('/api/profile', {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        email: document.getElementById('editEmail').value.trim(),
+        mobileNumber: document.getElementById('editMobile').value.trim(),
+        teamName: document.getElementById('editTeamName').value.trim(),
+      }),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.detail || 'Unable to update profile.');
+    profileEditForm.classList.add('hidden');
+    await loadProfile();
+    setAuthMessage(result.message);
+  } catch (error) {
+    setAuthMessage(error.message, true);
+  }
+});
+
+passwordForm?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  try {
+    const response = await fetch('/api/profile/password', {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        currentPassword: document.getElementById('currentPassword').value,
+        newPassword: document.getElementById('newPassword').value,
+        confirmPassword: document.getElementById('confirmNewPassword').value,
+      }),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.detail || 'Unable to update password.');
+    passwordForm.reset();
+    setAuthMessage(result.message);
+  } catch (error) {
+    setAuthMessage(error.message, true);
+  }
 });
 
 document.addEventListener('click', (event) => {

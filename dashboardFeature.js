@@ -39,14 +39,20 @@
 
       const titles = {
         team: 'Team',
+        members: 'Team Members',
         collection: 'Money Collection',
         calculator: 'Calculator',
         interest: 'Interest Calculator',
+        profile: 'Profile',
+        settings: 'Settings',
       };
 
       if (viewTitle) {
+        viewTitle.dataset.view = viewName;
         viewTitle.textContent = titles[viewName] || 'Dashboard';
       }
+
+      window.LanguageFeature?.updateViewTitle();
     },
   };
 
