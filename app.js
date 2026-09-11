@@ -12,8 +12,6 @@ const profileButton = document.getElementById('profileButton');
 const profileName = document.getElementById('profileName');
 const profileMenu = document.getElementById('profileMenu');
 const dashboardLanguageSelect = document.getElementById('dashboardLanguageSelect');
-const exploreBtn = document.getElementById('exploreBtn');
-const explorePanel = document.getElementById('explorePanel');
 const profileDetails = document.getElementById('profileDetails');
 const profileEditForm = document.getElementById('profileEditForm');
 const passwordForm = document.getElementById('passwordForm');
@@ -123,18 +121,6 @@ function setTheme(mode) {
 setTheme(localStorage.getItem('paisaTheme') || 'light');
 lightModeBtn?.addEventListener('click', () => setTheme('light'));
 darkModeBtn?.addEventListener('click', () => setTheme('dark'));
-
-if (exploreBtn && explorePanel) {
-  exploreBtn.addEventListener('click', () => {
-    const isOpening = explorePanel.classList.contains('hidden');
-    explorePanel.classList.toggle('hidden', !isOpening);
-    exploreBtn.setAttribute('aria-expanded', String(isOpening));
-    exploreBtn.querySelector('.explore-arrow').textContent = isOpening ? '↑' : '↓';
-    if (isOpening) {
-      explorePanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-  });
-}
 
 let selectedTeamId = null;
 let teams = [];

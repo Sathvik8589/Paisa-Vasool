@@ -1,17 +1,17 @@
 :root {
-  --bg: #fff7ed;
-  --bg-strong: #ffedd5;
+  --bg: #f1f2f4;
+  --bg-strong: #e9ebee;
   --card: rgba(255, 255, 255, 0.92);
-  --primary: #e05a33;
-  --primary-dark: #a63d25;
-  --secondary: #087f8c;
-  --accent: #f2b134;
-  --text: #24313a;
-  --muted: #5d6b70;
-  --border: rgba(36, 49, 58, 0.14);
-  --success: #087f8c;
-  --danger: #c2410c;
-  --shadow: 0 22px 60px rgba(104, 55, 31, 0.16);
+  --primary: #b05a45;
+  --primary-dark: #83412e;
+  --secondary: #3a7d74;
+  --accent: #cfaa4f;
+  --text: #26303a;
+  --muted: #5c6a72;
+  --border: rgba(54, 68, 84, 0.14);
+  --success: #2f7d5f;
+  --danger: #b0483f;
+  --shadow: 0 22px 60px rgba(58, 66, 78, 0.16);
 }
 
 * {
@@ -26,9 +26,9 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(242, 177, 52, 0.28), transparent 26%),
-    radial-gradient(circle at bottom right, rgba(8, 127, 140, 0.17), transparent 28%),
-    linear-gradient(135deg, #fff7ed 0%, #ffedd5 30%, #f0fdfa 68%, #ffffff 100%);
+    radial-gradient(circle at top left, rgba(141, 118, 96, 0.14), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(99, 112, 122, 0.12), transparent 28%),
+    linear-gradient(135deg, #f2f4f6 0%, #e9edf0 30%, #eef1f3 68%, #f6f7f8 100%);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: var(--text);
 }
@@ -79,11 +79,17 @@ select {
 
 .language-box select {
   border: none;
-  background: transparent;
   color: var(--text);
   font-weight: 700;
   min-width: 120px;
-  padding: 6px 10px;
+  padding: 6px 30px 6px 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  background: transparent
+    url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='10'%20height='6'%20viewBox='0%200%2010%206'%3E%3Cpath%20d='M0%200%20L5%206%20L10%200%20Z'%20fill='%236b7280'/%3E%3C/svg%3E")
+    no-repeat right 12px center;
 }
 
 .sr-only {
@@ -159,8 +165,8 @@ select {
 }
 
 .hero-badges span {
-  border: 1px solid rgba(8, 127, 140, 0.18);
-  background: rgba(8, 127, 140, 0.08);
+  border: 1px solid rgba(58, 125, 116, 0.16);
+  background: rgba(58, 125, 116, 0.07);
   color: var(--secondary);
   padding: 8px 12px;
   border-radius: 999px;
@@ -173,29 +179,6 @@ select {
   grid-template-columns: repeat(3, minmax(120px, 1fr));
   gap: 16px;
   margin-top: 26px;
-}
-
-.explore-btn {
-  margin-top: 24px;
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  background: var(--text);
-  color: #fff7ed;
-  border: 1px solid var(--text);
-  border-radius: 999px;
-  padding: 13px 18px 13px 22px;
-}
-
-.explore-btn:hover {
-  background: var(--primary-dark);
-  box-shadow: 0 10px 22px rgba(166, 61, 37, 0.22);
-}
-
-.explore-arrow {
-  color: var(--accent);
-  font-size: 1.15rem;
-  line-height: 1;
 }
 
 .explore-panel {
@@ -221,7 +204,7 @@ select {
 
 .explore-card {
   padding: 16px;
-  border: 1px solid rgba(8, 127, 140, 0.18);
+  border: 1px solid rgba(58, 125, 116, 0.15);
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.72);
 }
@@ -334,8 +317,8 @@ select {
 input:focus,
 select:focus {
   outline: none;
-  border-color: rgba(8, 127, 140, 0.65);
-  box-shadow: 0 0 0 4px rgba(8, 127, 140, 0.12);
+  border-color: rgba(58, 125, 116, 0.6);
+  box-shadow: 0 0 0 4px rgba(58, 125, 116, 0.12);
 }
 
 .link-row {
@@ -365,11 +348,11 @@ button {
 
 button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 8px 18px rgba(8, 127, 140, 0.14);
+  box-shadow: 0 8px 18px rgba(58, 125, 116, 0.12);
 }
 
 .primary-btn {
-  background: linear-gradient(135deg, var(--primary), #ed7950 52%, var(--accent));
+  background: linear-gradient(135deg, var(--primary), #c2704f 52%, var(--accent));
   color: white;
 }
 
@@ -378,7 +361,7 @@ button:hover {
 }
 
 .secondary-btn {
-  background: rgba(8, 127, 140, 0.1);
+  background: rgba(58, 125, 116, 0.1);
   color: var(--primary-dark);
 }
 
@@ -426,8 +409,8 @@ html[data-theme='dark'] {
 
 html[data-theme='dark'] body {
   background:
-    radial-gradient(circle at top left, rgba(224, 90, 51, 0.18), transparent 26%),
-    radial-gradient(circle at bottom right, rgba(8, 127, 140, 0.18), transparent 28%),
+    radial-gradient(circle at top left, rgba(150, 82, 62, 0.12), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(58, 125, 116, 0.12), transparent 28%),
     linear-gradient(135deg, #172127 0%, #24313a 58%, #172127 100%);
 }
 
@@ -533,11 +516,11 @@ html[data-theme='dark'] .collection-item {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(8, 127, 140, 0.1);
+  background: rgba(58, 125, 116, 0.1);
   color: var(--primary-dark);
   border-radius: 999px;
   padding: 8px 12px;
-  border: 1px solid rgba(8, 127, 140, 0.18);
+  border: 1px solid rgba(58, 125, 116, 0.16);
 }
 
 .profile-avatar {
@@ -641,8 +624,8 @@ html[data-theme='dark'] .collection-item {
 
 .result-box {
   margin-top: 20px;
-  border: 1px solid rgba(8, 127, 140, 0.18);
-  background: linear-gradient(135deg, rgba(8, 127, 140, 0.07), rgba(242, 177, 52, 0.08));
+  border: 1px solid rgba(58, 125, 116, 0.15);
+  background: linear-gradient(135deg, rgba(58, 125, 116, 0.07), rgba(207, 170, 79, 0.08));
   border-radius: 14px;
   padding: 18px 16px;
   display: flex;
@@ -692,7 +675,7 @@ html[data-theme='dark'] .collection-item {
   padding: 16px;
   border: 1px solid var(--border);
   border-radius: 12px;
-  background: rgba(8, 127, 140, 0.06);
+  background: rgba(58, 125, 116, 0.06);
 }
 
 .members-team-card h4 {
@@ -754,13 +737,27 @@ html[data-theme='dark'] .collection-item {
 }
 
 .mode-btn {
-  background: rgba(8, 127, 140, 0.1);
+  background: rgba(58, 125, 116, 0.1);
   color: var(--text);
 }
 
 .mode-btn.active {
   background: var(--secondary);
   color: white;
+}
+
+.site-footer {
+  margin: 0;
+  padding: 18px 24px;
+  text-align: center;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+}
+
+.site-footer p {
+  margin: 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
 }
 
 @media (max-width: 900px) {
@@ -778,6 +775,10 @@ html[data-theme='dark'] .collection-item {
 
   .workspace {
     padding: 16px;
+  }
+
+  .site-footer {
+    padding: 14px 16px;
   }
 
   .two-col-grid,
