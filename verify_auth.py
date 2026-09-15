@@ -20,7 +20,6 @@ def main():
             'password': 'secret123',
             'confirmPassword': 'secret123',
             'mobileNumber': '9876543210',
-            'teamName': 'Demo Team',
         },
     )
 

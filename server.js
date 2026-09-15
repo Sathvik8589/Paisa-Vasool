@@ -1,6 +1,9 @@
+// DEPRECATED: FastAPI main.py with Supabase is the active application backend.
+// Retained only for legacy local-data compatibility via `npm run legacy:start`.
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -35,6 +38,19 @@ function writeData(data) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
 }
 
+function hashPassword(password) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.scryptSync(password, salt, 64).toString('hex');
+  return `scrypt$${salt}$${hash}`;
+}
+
+function verifyPassword(password, storedHash) {
+  const [, salt, expectedHash] = String(storedHash || '').split('$');
+  if (!salt || !expectedHash) return false;
+  const actualHash = crypto.scryptSync(password, salt, 64).toString('hex');
+  return crypto.timingSafeEqual(Buffer.from(actualHash, 'hex'), Buffer.from(expectedHash, 'hex'));
+}
+
 function findTeamById(id) {
   const data = readData();
   return data.teams.find((team) => team.id === id);
@@ -54,6 +70,11 @@ app.post('/api/login', (req, res) => {
 
   if (!login || !password) {
     return res.status(400).json({ message: 'Login and password are required.' });
+  }
+
+  const user = readData().users.find((item) => item.login === login);
+  if (!user || !verifyPassword(password, user.passwordHash)) {
+    return res.status(401).json({ message: 'No account found with that login and password.' });
   }
 
   res.json({
@@ -76,7 +97,7 @@ app.post('/api/signup', (req, res) => {
     return res.status(409).json({ message: 'This login already exists.' });
   }
 
-  data.users.push({ login, password });
+  data.users.push({ login, passwordHash: hashPassword(password) });
   writeData(data);
 
   res.status(201).json({

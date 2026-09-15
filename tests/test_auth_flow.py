@@ -20,7 +20,6 @@ def test_signup_and_login_flow_uses_database(tmp_path, monkeypatch):
             "password": "secret123",
             "confirmPassword": "secret123",
             "mobileNumber": "9876543210",
-            "teamName": "Demo Team",
         },
     )
 

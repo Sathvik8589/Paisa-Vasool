@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import os
 import hashlib
 import hmac
+import os
 import secrets
 from datetime import datetime, timezone
 from pathlib import Path
@@ -137,7 +137,7 @@ async def signup(payload: dict[str, Any]):
     password = (payload.get("password") or "").strip()
     confirm_password = (payload.get("confirmPassword") or "").strip()
     mobile_number = (payload.get("mobileNumber") or payload.get("mobile") or "").strip()
-    team_name = (payload.get("teamName") or "").strip() or login_name
+    team_name = login_name
     if not login_name or not email or not password or not mobile_number:
         raise HTTPException(status_code=400, detail="Username, email, password, and mobile number are required.")
     if password != confirm_password:
@@ -167,24 +167,22 @@ async def create_team(request: Request, payload: dict[str, Any]):
     if user is None:
         raise HTTPException(status_code=401, detail="Authentication required.")
     name = (payload.get("name") or "").strip()
-    head_names = [str(item).strip() for item in payload.get("headNames", []) if str(item).strip()]
+    head_names = list(dict.fromkeys(str(item).strip() for item in payload.get("headNames", []) if str(item).strip()))
     if not head_names and payload.get("headName"):
         head_names = [str(payload["headName"]).strip()]
-    if not name or len(head_names) != 3:
-        raise HTTPException(status_code=400, detail="Team name and team head are required.")
-    if len(set(head_names)) != 3:
-        raise HTTPException(status_code=400, detail="The three team heads must be different.")
-    if user["login"] not in head_names:
-        raise HTTPException(status_code=400, detail="Your username must be one of the three team heads.")
-    for head_name in head_names:
-        if get_user(head_name) is None:
-            raise HTTPException(status_code=400, detail=f"Team head '{head_name}' must create an account first.")
+    member_names = list(dict.fromkeys(str(item).strip() for item in payload.get("members", []) if str(item).strip()))
+    if not name or not head_names:
+        raise HTTPException(status_code=400, detail="Team name and at least one team head are required.")
+    invalid_heads = [head_name for head_name in head_names if get_user(head_name) is None]
+    if invalid_heads:
+        raise HTTPException(status_code=400, detail=f"Invalid team head account(s): {', '.join(invalid_heads)}.")
+    invalid_members = [member_name for member_name in member_names if get_user(member_name) is None]
+    if invalid_members:
+        raise HTTPException(status_code=400, detail=f"Invalid team member account(s): {', '.join(invalid_members)}.")
     team = supabase.table("teams").insert({"user_id": user["id"], "name": name, "head_name": head_names[0], "created_at": now_iso()}).execute().data[0]
     supabase.table("team_heads").insert([{"team_id": team["id"], "head_login": head} for head in head_names]).execute()
-    for member in payload.get("members") or []:
-        member_name = str(member).strip()
-        if member_name:
-            supabase.table("team_members").upsert({"team_id": team["id"], "member_name": member_name}, on_conflict="team_id,member_name").execute()
+    for member_name in member_names:
+        supabase.table("team_members").upsert({"team_id": team["id"], "member_name": member_name}, on_conflict="team_id,member_name").execute()
     return {"team": serialize_team(team)}
 
 
@@ -196,6 +194,8 @@ async def add_member(request: Request, team_id: str, payload: dict[str, str]):
     member_name = (payload.get("memberName") or "").strip()
     if not member_name:
         raise HTTPException(status_code=400, detail="Member name is required.")
+    if get_user(member_name) is None:
+        raise HTTPException(status_code=400, detail=f"Invalid team member account: '{member_name}'.")
     team = find_user_team(user["id"], team_id)
     head = supabase.table("team_heads").select("id").eq("team_id", team_id).eq("head_login", user["login"]).limit(1).execute()
     if not head.data:
