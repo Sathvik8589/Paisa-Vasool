@@ -2,9 +2,10 @@
   "name": "paisa-vasool",
   "version": "1.0.0",
   "description": "Paisa Vasool team money collection app",
-  "main": "server.js",
+  "main": "main.py",
   "scripts": {
-    "start": "node server.js"
+    "start": "python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000",
+    "legacy:start": "node server.js"
   },
   "dependencies": {
     "express": "^4.19.2"

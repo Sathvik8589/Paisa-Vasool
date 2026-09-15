@@ -21,5 +21,9 @@ uvicorn main:app --reload
 The local app is available at `http://127.0.0.1:8000/`.
 
 The backend now stores users, teams, team heads, team members, and money collections in Supabase. Passwords are stored as salted hashes and are never stored as readable text. The old local SQLite file is not used by the application.
+
+## Runtime source of truth
+
+Run the FastAPI application with `python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000` or `npm start`. The Express `server.js` and flat-file `data.json` files are deprecated compatibility paths and are not used by the application.
 # Paisa-Vasool
 Paisa Vasool – A web-based team management application for tracking member contributions, expenses, loans, interest, balances, and event photos with multilingual support.
