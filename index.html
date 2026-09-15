@@ -53,7 +53,12 @@
               </div>
             </div>
 
-            <section id="explorePanel" class="explore-panel" aria-label="Paisa Vasool features">
+            <button type="button" id="exploreButton" class="explore-toggle" aria-expanded="false" aria-controls="explorePanel">
+              <span>Explore the Application</span>
+              <span class="explore-arrow" aria-hidden="true">↓</span>
+            </button>
+
+            <section id="explorePanel" class="explore-panel hidden" aria-label="Paisa Vasool features" aria-hidden="true">
               <div class="explore-heading">
                 <p class="eyebrow" data-i18n="exploreEyebrow">A quick look around</p>
                 <h2 data-i18n="exploreTitle">Everything you need to keep money moving.</h2>
@@ -138,11 +143,6 @@
                 <input type="password" id="signupConfirmPassword" data-placeholder-i18n="signupPlaceholderConfirmPassword" placeholder="Confirm password" autocomplete="new-password" required />
               </label>
 
-              <label>
-                <span data-i18n="signupTeamName">Team Name (optional)</span>
-                <input type="text" id="signupTeamName" data-placeholder-i18n="signupPlaceholderTeamName" placeholder="Enter team name" />
-              </label>
-
               <div class="button-stack">
                 <button type="submit" class="primary-btn" data-i18n="createAccountBtn">Create Account</button>
                 <button type="button" id="backToLoginBtn" class="secondary-btn" data-i18n="backToLogin">Back to login</button>
@@ -154,7 +154,7 @@
       </main>
 
       <footer class="site-footer">
-        <p>Created by S. Sathvik Reddy</p>
+        <p>Created by S. Sathvik Reddy.</p>
       </footer>
     </div>
 
@@ -224,12 +224,17 @@
 
               <label>
                 <span data-i18n="teamHeadTwoLabel">Team Head 2</span>
-                <input type="text" id="teamHeadTwo" data-placeholder-i18n="teamHeadPlaceholder" placeholder="Enter team head" required />
+                <input type="text" id="teamHeadTwo" data-placeholder-i18n="teamHeadPlaceholder" placeholder="Optional team head" />
               </label>
 
               <label>
                 <span data-i18n="teamHeadThreeLabel">Team Head 3</span>
-                <input type="text" id="teamHeadThree" data-placeholder-i18n="teamHeadPlaceholder" placeholder="Enter team head" required />
+                <input type="text" id="teamHeadThree" data-placeholder-i18n="teamHeadPlaceholder" placeholder="Optional team head" />
+              </label>
+
+              <label>
+                <span>Team Members (optional)</span>
+                <textarea id="teamMembers" rows="3" placeholder="Enter registered usernames separated by commas"></textarea>
               </label>
 
               <button type="submit" class="primary-btn" data-i18n="createTeam">Create Team</button>
@@ -336,7 +341,7 @@
             <form id="calculatorForm" class="mini-form">
               <label>
                 <span data-i18n="expression">Expression</span>
-                <input type="text" id="calculatorInput" data-placeholder-i18n="expressionPlaceholder" placeholder="Example: 1500 + 350 * 2" required />
+                <input type="text" id="calculatorInput" data-placeholder-i18n="expressionPlaceholder" placeholder="Example: 1500 + 350 * 2" inputmode="decimal" enterkeyhint="done" autocomplete="off" autocapitalize="off" spellcheck="false" required />
               </label>
               <button type="submit" class="primary-btn" data-i18n="calculate">Calculate</button>
             </form>

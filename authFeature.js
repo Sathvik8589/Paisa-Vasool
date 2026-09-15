@@ -2,7 +2,7 @@
   const AuthFeature = {
     elements: {},
 
-    bind({ loginForm, signupForm, signupBtn, backToLoginBtn, authMessage, loginInput, passwordInput, signupUsername, signupEmail, signupPassword, signupConfirmPassword, signupMobile, signupTeamName }) {
+    bind({ loginForm, signupForm, signupBtn, backToLoginBtn, authMessage, loginInput, passwordInput, signupUsername, signupEmail, signupPassword, signupConfirmPassword, signupMobile }) {
       this.elements = {
         loginForm,
         signupForm,
@@ -16,12 +16,11 @@
         signupPassword,
         signupConfirmPassword,
         signupMobile,
-        signupTeamName,
       };
     },
 
     setHandlers({ onLogin, onSignup, onShowSignup, onShowLogin }) {
-      const { loginForm, signupForm, signupBtn, backToLoginBtn, loginInput, passwordInput, signupUsername, signupEmail, signupPassword, signupConfirmPassword, signupMobile, signupTeamName } = this.elements;
+      const { loginForm, signupForm, signupBtn, backToLoginBtn, loginInput, passwordInput, signupUsername, signupEmail, signupPassword, signupConfirmPassword, signupMobile } = this.elements;
 
       loginForm?.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -53,9 +52,7 @@
         const password = signupPassword?.value.trim() || '';
         const confirmPassword = signupConfirmPassword?.value.trim() || '';
         const mobileNumber = signupMobile?.value.trim() || '';
-        const teamName = signupTeamName?.value.trim() || '';
-
-        await onSignup({ username, email, password, confirmPassword, mobileNumber, teamName });
+        await onSignup({ username, email, password, confirmPassword, mobileNumber });
       });
     },
 

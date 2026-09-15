@@ -2,13 +2,14 @@
   const TeamMembersFeature = {
     elements: {},
 
-    bind({ teamForm, teamNameInput, teamHeadOneInput, teamHeadTwoInput, teamHeadThreeInput, memberForm, memberNameInput, onCreateTeam, onAddMember }) {
+    bind({ teamForm, teamNameInput, teamHeadOneInput, teamHeadTwoInput, teamHeadThreeInput, teamMembersInput, memberForm, memberNameInput, onCreateTeam, onAddMember }) {
       this.elements = {
         teamForm,
         teamNameInput,
         teamHeadOneInput,
         teamHeadTwoInput,
         teamHeadThreeInput,
+        teamMembersInput,
         memberForm,
         memberNameInput,
         onCreateTeam,
@@ -25,7 +26,11 @@
           this.elements.teamHeadTwoInput?.value.trim() || '',
           this.elements.teamHeadThreeInput?.value.trim() || '',
         ];
-        await this.elements.onCreateTeam({ name, headNames });
+        const members = (this.elements.teamMembersInput?.value || '')
+          .split(',')
+          .map((member) => member.trim())
+          .filter(Boolean);
+        await this.elements.onCreateTeam({ name, headNames, members });
       });
 
       this.elements.memberForm?.addEventListener('submit', async (event) => {

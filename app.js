@@ -26,6 +26,7 @@ const teamNameInput = document.getElementById('teamName');
 const teamHeadOneInput = document.getElementById('teamHeadOne');
 const teamHeadTwoInput = document.getElementById('teamHeadTwo');
 const teamHeadThreeInput = document.getElementById('teamHeadThree');
+const teamMembersInput = document.getElementById('teamMembers');
 
 const collectionForm = document.getElementById('collectionForm');
 const collectionTeamSelect = document.getElementById('collectionTeamSelect');
@@ -44,6 +45,18 @@ const totalAmountValue = document.getElementById('totalAmountValue');
 const navButtons = document.querySelectorAll('.nav-btn');
 const viewPanels = document.querySelectorAll('.view-panel');
 const membersOverview = document.getElementById('membersOverview');
+const exploreButton = document.getElementById('exploreButton');
+const explorePanel = document.getElementById('explorePanel');
+
+exploreButton?.addEventListener('click', () => {
+  const isOpen = exploreButton.getAttribute('aria-expanded') === 'true';
+  const nextState = !isOpen;
+  exploreButton.setAttribute('aria-expanded', String(nextState));
+  explorePanel?.classList.toggle('hidden', !nextState);
+  explorePanel?.setAttribute('aria-hidden', String(!nextState));
+  const arrow = exploreButton.querySelector('.explore-arrow');
+  if (arrow) arrow.textContent = nextState ? '↑' : '↓';
+});
 
 if (window.AuthFeature) {
   window.AuthFeature.bind({
@@ -59,7 +72,6 @@ if (window.AuthFeature) {
     signupPassword: document.getElementById('signupPassword'),
     signupConfirmPassword: document.getElementById('signupConfirmPassword'),
     signupMobile: document.getElementById('signupMobile'),
-    signupTeamName: document.getElementById('signupTeamName'),
   });
 }
 
@@ -81,6 +93,7 @@ if (window.TeamMembersFeature) {
     teamHeadOneInput,
     teamHeadTwoInput,
     teamHeadThreeInput,
+    teamMembersInput,
     memberForm,
     memberNameInput,
     onCreateTeam: handleCreateTeam,
@@ -145,6 +158,18 @@ function showLoginForm() {
 
   document.getElementById('loginForm').classList.remove('hidden');
   document.getElementById('signupForm').classList.add('hidden');
+}
+
+function showToast(message, isError = false) {
+  const toast = document.createElement('div');
+  toast.className = `toast${isError ? ' toast-error' : ''}`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add('visible'));
+  window.setTimeout(() => {
+    toast.classList.remove('visible');
+    window.setTimeout(() => toast.remove(), 250);
+  }, 3500);
 }
 
 function setAuthMessage(message, isError = false) {
@@ -368,13 +393,97 @@ function renderCollectionSummary(team) {
 }
 
 function calculateExpression(expression) {
-  const sanitized = expression.replace(/\s+/g, '');
-  if (!sanitized || !/^[0-9+\-*/().%]+$/.test(sanitized)) {
-    throw new Error('Invalid expression.');
+  let sanitized = String(expression || '')
+    .replace(/[×x]/gi, '*')
+    .replace(/[÷]/g, '/')
+    .replace(/[−–—]/g, '-')
+    .replace(/,/g, '')
+    .replace(/\s+/g, '')
+    .replace(/[+\-*/^]+$/, '');
+
+  if (!sanitized) throw new Error('Invalid expression.');
+
+  const openingParentheses = (sanitized.match(/\(/g) || []).length;
+  const closingParentheses = (sanitized.match(/\)/g) || []).length;
+  if (openingParentheses > closingParentheses) {
+    sanitized += ')'.repeat(openingParentheses - closingParentheses);
   }
 
-  // eslint-disable-next-line no-new-func
-  const result = Function(`"use strict"; return (${sanitized});`)();
+  let position = 0;
+  const peek = () => sanitized[position] || '';
+  const consume = (character) => {
+    if (peek() !== character) return false;
+    position += 1;
+    return true;
+  };
+
+  function parseExpression() {
+    let left = parseTerm();
+    while (peek() === '+' || peek() === '-') {
+      const operator = sanitized[position++];
+      const right = parseTerm();
+      const rightValue = right.isPercentage ? left.value * right.value : right.value;
+      left = { value: operator === '+' ? left.value + rightValue : left.value - rightValue, isPercentage: false };
+    }
+    return left;
+  }
+
+  function parseTerm() {
+    let left = parsePower();
+    while (true) {
+      let operator = '';
+      if (peek() === '*' || peek() === '/') {
+        operator = sanitized[position++];
+      } else if (peek() === '(') {
+        operator = '*';
+      } else {
+        break;
+      }
+      const right = parsePower();
+      left = { value: operator === '*' ? left.value * right.value : left.value / right.value, isPercentage: false };
+    }
+    return left;
+  }
+
+  function parsePower() {
+    const left = parseUnary();
+    if (!consume('^')) return left;
+    const right = parsePower();
+    return { value: left.value ** right.value, isPercentage: false };
+  }
+
+  function parseUnary() {
+    if (consume('+')) return parseUnary();
+    if (consume('-')) return { value: -parseUnary().value, isPercentage: false };
+    return parsePrimary();
+  }
+
+  function parsePrimary() {
+    let value;
+    let isPercentage = false;
+    if (consume('(')) {
+      const inner = parseExpression();
+      value = inner.value;
+      isPercentage = inner.isPercentage;
+      if (!consume(')')) throw new Error('Invalid expression.');
+    } else {
+      const numberStart = position;
+      while (/[0-9.]/.test(peek())) position += 1;
+      if (numberStart === position || sanitized.slice(numberStart, position).split('.').length > 2) {
+        throw new Error('Invalid expression.');
+      }
+      value = Number(sanitized.slice(numberStart, position));
+    }
+
+    while (consume('%')) {
+      value /= 100;
+      isPercentage = true;
+    }
+    return { value, isPercentage };
+  }
+
+  const result = parseExpression().value;
+  if (position !== sanitized.length) throw new Error('Invalid expression.');
   if (!Number.isFinite(result)) {
     throw new Error('Invalid calculation.');
   }
@@ -417,7 +526,9 @@ async function handleLogin({ login, password }) {
 
     currentUser = login;
     localStorage.setItem('paisaUser', currentUser);
-    setAuthMessage(result.message || 'Login successful.');
+    const message = result.message || 'Login successful.';
+    setAuthMessage(message);
+    showToast(message);
     setActiveView('team');
     updateProfileHeader();
     showDashboard();
@@ -426,7 +537,7 @@ async function handleLogin({ login, password }) {
   }
 }
 
-async function handleSignup({ username, email, password, confirmPassword, mobileNumber, teamName }) {
+async function handleSignup({ username, email, password, confirmPassword, mobileNumber }) {
   if (!username || !email || !password || !confirmPassword || !mobileNumber) {
     setAuthMessage('Please fill in username, email, password, and mobile number.', true);
     return;
@@ -441,7 +552,7 @@ async function handleSignup({ username, email, password, confirmPassword, mobile
     const response = await fetch('/api/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, password, confirmPassword, mobileNumber, teamName }),
+      body: JSON.stringify({ username, email, password, confirmPassword, mobileNumber }),
     });
 
     const result = await response.json();
@@ -455,9 +566,10 @@ async function handleSignup({ username, email, password, confirmPassword, mobile
     document.getElementById('signupPassword').value = '';
     document.getElementById('signupConfirmPassword').value = '';
     document.getElementById('signupMobile').value = '';
-    document.getElementById('signupTeamName').value = '';
 
-    setAuthMessage(result.message || 'Account created. Please login.');
+    const message = result.message || 'Account created. Please login.';
+    setAuthMessage(message);
+    showToast(message);
     showLoginForm();
   } catch (error) {
     setAuthMessage('Sign up failed. Please try again.', true);
@@ -473,12 +585,12 @@ if (window.AuthFeature) {
   });
 }
 
-async function handleCreateTeam({ name, headNames }) {
+async function handleCreateTeam({ name, headNames, members }) {
   try {
     const response = await fetch('/api/teams', {
       method: 'POST',
       headers: getAuthHeaders(),
-      body: JSON.stringify({ name, headNames, members: [] }),
+      body: JSON.stringify({ name, headNames, members }),
     });
 
     const result = await response.json();
@@ -491,7 +603,10 @@ async function handleCreateTeam({ name, headNames }) {
     teamHeadOneInput.value = '';
     teamHeadTwoInput.value = '';
     teamHeadThreeInput.value = '';
-    setAuthMessage(`Team created: ${result.team.name}`);
+    teamMembersInput.value = '';
+    const message = `Team created: ${result.team.name}`;
+    setAuthMessage(message);
+    showToast(message);
     fetchTeams();
   } catch (error) {
     setAuthMessage('Unable to create team.', true);
@@ -518,7 +633,9 @@ async function handleAddMember({ memberName }) {
       return;
     }
 
-    setAuthMessage(`Member added to ${result.team.name}`);
+    const message = `Member added to ${result.team.name}`;
+    setAuthMessage(message);
+    showToast(message);
     fetchTeams();
   } catch (error) {
     setAuthMessage('Member could not be added.', true);
